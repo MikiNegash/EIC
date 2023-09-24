@@ -102,10 +102,10 @@
                     <h3>Sector List</h3>
                     <ul id="tree1">
                         @foreach($sectors as $sector)
-                        <li>
+                        <li class="bi bi-plus">
                             {{ $sector->name }}
                             @if(count($sector->childs))
-                            @include('Investment.manageChild',['childs' => $sector->childs])
+                                 @include('Investment.manageChild',['childs' => $sector->childs])
                             @endif
                         </li>
                         @endforeach

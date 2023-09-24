@@ -133,7 +133,6 @@ Route::controller(RegisterRegionAndZone::class)->group(function()
         Route::post('/investment/request_and_view_investment', 'RequestInvestmentRegistration')->middleware("permission:request_investment_registration");       
     })->middleware('auth');
 
-    //Investment Sector
     Route::controller(InvestmentSector::class)->group(function()
     { 
         
