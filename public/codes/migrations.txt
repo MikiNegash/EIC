@@ -1,0 +1,62 @@
+Schema::create('permission_group', function (Blueprint $table)
+        {
+            $table->increments('id');
+            $table->string('group_name')->unique();
+            $table->integer('order_num');
+            $table->timestamps();
+        });
+
+
+        Schema::create('permissions', function (Blueprint $table)
+        {
+            $table->increments('id');
+            $table->string('name')->unique();
+            $table->string('label');
+            $table->integer('order_num');
+            $table->unsignedInteger('group_id');
+            $table->foreign('group_id')->references('id')->on('permission_group')->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('roles', function (Blueprint $table)
+        {
+            $table->increments('id');
+            $table->string('name')->unique();
+            $table->unsignedInteger('added_by');
+            $table->timestamps();
+            $table->foreign('added_by')->references('id')->on('users')->onDelete('cascade');
+        });
+
+        Schema::create('role_permissions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('role_id');
+            $table->unsignedInteger('permission_id');
+            $table->unsignedInteger('added_by');
+            $table->timestamps();
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+            $table->foreign('added_by')->references('id')->on('users')->onDelete('cascade');
+        });
+
+        Schema::create('user_role', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('role_id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('added_by');
+            $table->timestamps();
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('added_by')->references('id')->on('users')->onDelete('cascade');
+        });
+
+        Schema::create('user_permissions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('permission_id');
+            $table->unsignedInteger('user_id');
+            $table->boolean('status')->default(1); // for permission that allowed or disallowed
+            $table->unsignedInteger('added_by');
+            $table->timestamps();
+            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('added_by')->references('id')->on('users')->onDelete('cascade');
+        });
