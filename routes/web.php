@@ -10,6 +10,7 @@ use App\Http\Controllers\Basic\ItemsManagement;
 use App\Http\Controllers\Basic\MeasurmentsManagement;
 use App\Http\Controllers\Actor\UsersController;
 use App\Http\Controllers\Actor\TempController;
+use App\Http\Controllers\Investment\IndustryPark;
 use App\Http\Controllers\Investment\InvestmentTypeController;
 use App\Http\Controllers\Services\VIPServiceController;
 use App\Http\Controllers\Investment\InvestmentRegistration;
@@ -132,7 +133,7 @@ Route::controller(RegisterRegionAndZone::class)->group(function()
         Route::post('/investment/icvs', 'submitInvestmentCommission')->middleware("permission:Investment_commission_page");
         Route::post('/investment/request_and_view_investment', 'RequestInvestmentRegistration')->middleware("permission:request_investment_registration");       
     })->middleware('auth');
-
+    //Investment Sector
     Route::controller(InvestmentSector::class)->group(function()
     { 
         
@@ -142,6 +143,19 @@ Route::controller(RegisterRegionAndZone::class)->group(function()
         Route::post('/investment/addCategory', 'addCategory')->middleware("permission:Investment_commission_page")->name('invest.sector');;
         Route::post('/investment/request_and_view_investment', 'RequestInvestmentRegistration')->middleware("permission:request_investment_registration");       
     })->middleware('auth');
+
+     //Investment Park
+     Route::controller(IndustryPark::class)->group(function()
+     { 
+         Route::post('/investment/invSector', 'update_invCom');
+         Route::get('/investment/loadStakeholder', 'load_investmentSector')->middleware("permission:Investment_commission_page");
+         Route::get('/investment/loadInsustyPark', 'load_IndustyPark')->middleware("permission:Investment_commission_page");
+         Route::post('/investment/loadzones', 'zoneRender')->middleware("permission:Investment_commission_page");
+         Route::post('/investment/loadworeda', 'woredaRender')->middleware("permission:Investment_commission_page");
+         Route::get('/investment/park', 'displayIndustryParkPage')->middleware("permission:Investment_commission_page");
+         Route::post('/investment/parkSubmit', 'submitIndustryPark')->middleware("permission:Investment_commission_page");
+         Route::post('/investment/request_and_view_investment', 'RequestInvestmentRegistration')->middleware("permission:request_investment_registration");       
+     })->middleware('auth');
 use App\Http\Controllers\Basic\OtherVisaController;
 
 use App\Http\Controllers\Letter\LetterController;
