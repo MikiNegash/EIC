@@ -172,7 +172,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editCommisionForm" method="POST" action="/investment/invComupdate">
+                <form id="editCommisionForm" method="POST" action="/investment/invSector">
                     @csrf
                     <div class="row gy-3">
                         <div class="col-xl-12">
@@ -360,8 +360,8 @@
                 _token: '{{ csrf_token() }}',
                 id: $('#edit_id').val(),
                 name: $('#edit_name').val(),
-                code: $('#edit_woreda').val(),
-                type: $('#edit_stake').val(),
+                woreda: $('#edit_woreda').val(),
+                stakeholder: $('#edit_stake').val(),
                 region: $('#edit_region').val(),
             };
 

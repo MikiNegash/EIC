@@ -74,28 +74,27 @@ class IndustryPark extends Controller
             {
                     return view("errors.role_permission_error");
             } */
-            $investmentCommision = new InvestmentCommission();
-            $investmentCommision->id = $request->edit_id;
-            $investmentCommision->name=$request->edit_name;
-            $investmentCommision->code=$request->edit_code;
-            $investmentCommision->updated_by=Auth::user()->id;
-            $investmentCommision->type=$request->edit_types;
-            $investmentCommision->region_id=$request->edit_region;
-            $investmentCommision->is_main=1;
-            $investmentCommision->updated_at=$request->created_at;
+            $industryPark = new InvestmentIndustryPark();
+            $industryPark->id = $request->id;
+            $industryPark->name=$request->name;
+            $industryPark->woreda_id=$request->woreda;
+            $industryPark->updated_by=Auth::user()->id;
+            $industryPark->stakeholder_id=$request->stakeholder;
+            $industryPark->statusChangedBy=Auth::user()->id;
+            $industryPark->updated_at=new DateTime();
       
-              $invUpdate = InvestmentCommission::find($investmentCommision->id);
-             /*  $invUpdate->update($investmentCommision->all()); */
+              $invUpdate = InvestmentCommission::find($industryPark->id);
+              //$invUpdate->update();
 
               $invUpdate->update([
-                'name' =>  $investmentCommision->name,
-                'code' => $investmentCommision->code,
+                'name' =>  $industryPark->name,
+                'stakeholder_id' => $industryPark->stakeholder_id,
                 'updated_by' => Auth::user()->id,
-                'type' => $investmentCommision->type,
-                'region_id' => $investmentCommision->region_id,                
-                'updated_at' => $investmentCommision->updated_at
+                'statusChangedBy' => $industryPark->statusChangedBy,
+                'woreda_id' => $industryPark->woreda_id,                
+                'updated_at' => $industryPark->updated_at
             ]);
-              return redirect()->route('invest.view')
+              return redirect()->route('invest.park')
                 ->with('success', 'Investment Commission updated successfully.');
     }
 

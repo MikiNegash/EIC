@@ -85,9 +85,9 @@
     }
 </style>
 <div class="container" id="generalForm">
-    <button type="button" class="btn btn_primary" data-bs-toggle="modal" data-bs-target="#messageModal">
+    <!--     <button type="button" class="btn btn_primary" data-bs-toggle="modal" data-bs-target="#messageModal">
         <i class="bi bi-plus"></i> New
-    </button>
+    </button> -->
     <div class="card " style="margin-top: 10px;">
         <div class="card-header">
             <div class="card-title">
@@ -99,60 +99,56 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <h3>Sector List</h3>
+                    <h5>Sector List</h5>
                     <ul id="tree1">
                         @foreach($sectors as $sector)
                         <li class="bi bi-plus">
-                            {{ $sector->name }}
+                            <span id='{{$sector->id}}**{{$sector->name}}' class="sector-tree">{{ $sector->name }}</span>
                             @if(count($sector->childs))
-                                 @include('Investment.manageChild',['childs' => $sector->childs])
+                            @include('Investment.manageChild',['childs' => $sector->childs])
                             @endif
                         </li>
                         @endforeach
                     </ul>
                 </div>
                 <div class="col-md-6">
-                    <h3>Add New Sector</h3>
+                    <h5>Add New Sector</h5>
 
 
-                    <form action="{{ route('invest.sector') }}" method="POST">
-    @csrf
+                    <form action="{{ route('invest.sector') }}" method="POST" id='frm'>
+                        @csrf
 
 
-                    @if ($message = Session::get('success'))
-                    <div class="alert alert-success alert-block">
-                        <button type="button" class="close" data-dismiss="alert">×</button>
-                        <strong>{{ $message }}</strong>
-                    </div>
-                    @endif
+                        @if ($message = Session::get('success'))
+                        <div class="alert alert-success alert-block">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            <strong>{{ $message }}</strong>
+                        </div>
+                        @endif
+                        <input type="hidden" class="form-control col-xl-6" id="selectSector_id" name="selectSector_id" >
+                        <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
+                            <label for="input-rounded1" class="form-label">Parent Sector</label>
+                            <input type="text" class="form-control col-xl-6" id="selectSector" name="selectSector" placeholder="please select Sector from Sector List">
+                            <span class="text-danger">{{ $errors->first('selectSector') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
+                            <label for="input-rounded1" class="form-label">Name</label>
+                            <input type="text" class="form-control col-xl-6" id="name" name="name" placeholder="please enter name">
 
+                            <span class="text-danger">{{ $errors->first('name') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
+                            <label for="input-rounded1" class="form-label">Type</label>
+                            <input type="text" class="form-control col-xl-6" id="type" name="type" placeholder="please enter name">
 
-                    <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
-                    <label for="input-rounded1" class="form-label">Name</label>
-                    <input type="text" class="form-control col-xl-6" id="name" name="name" placeholder="please enter name">
-                      
-                        <span class="text-danger">{{ $errors->first('name') }}</span>
-                    </div>
+                            <span class="text-danger">{{ $errors->first('type') }}</span>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <button class="btn btn_primary bi bi-plus" id="btn_add" name="btn_add">Add</button>
+                        </div>
 
-
-                    <div class="form-group {{ $errors->has('id') ? 'has-error' : '' }}">
-                    <label for="input-rounded1" class="form-label">Sector</label>
-                    <select class="form-select  validate-select" id="sec" name="sec">
-                                    <option value="">Select a Sector</option>
-                                    @foreach ($allSectors as $sec)
-                                    <option>{{ $sec }}</option>
-                                    @endforeach
-                    </select>
-                      
-                        <span class="text-danger">{{ $errors->first('id') }}</span>
-                    </div>
-
-
-                    <div class="form-group">
-                        <button class="btn btn-success">Add New</button>
-                    </div>
-
-</form>
+                    </form>
                 </div>
             </div>
 
@@ -216,6 +212,49 @@
     });
     /* Initialization of treeviews */
     $('#tree1').treed();
+
+    $('.sector-tree').click(function(e) {
+        var id = $(this).attr('id');
+        const myArray = id.split("**");
+        $('#selectSector').val(myArray[1]);
+        $('#selectSector_id').val(myArray[0]);
+        
+        // alert($(this).attr('id'));
+
+
+    });
+
+    $('#btn_add').on('click', function(e) {
+
+        console.log('add btn is clicked')
+        var formData = {
+            _token: '{{ csrf_token() }}',
+            name: $('#name').val(),
+            parent_id: $('#selectSector_id').val(),
+            type: $('#type').val(),
+            parent_name: $('#selectSector').val(),
+        };
+        console.log('FormData: ' + formData.name + " parentId: " + formData.parent_id + " type: " + formData.type);
+        $.ajax({
+            url: "/investment/addSector",
+            type: "POST",
+            data: formData,
+            beforeSend:function(data){
+                console.log(JSON.stringify(data));
+            },
+            success: function(data) {
+                console.log(JSON.stringify(data));
+                // $('#woreda').empty();
+                //$('#frm')[0].reset();
+            
+
+            },
+            error: function(data) {
+                console.log(data);
+                showErrorMessage('Something occured please try again or contact administrator');
+            }
+        })
+    });
 </script>
 
 
