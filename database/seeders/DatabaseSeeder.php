@@ -436,7 +436,13 @@ class DatabaseSeeder extends Seeder
                                         "title" => "Investment Commission",
                                         "link"=>"/investment/icv",  
                                         "permission_name"=>"Investment_commission_page",                                 
-                                        "item_code"=>"MC-36-MI-02"
+                                        "item_code"=>"MC-37-MI-02"
+                                     ], 
+                                     [
+                                        "title" => "Template Tags",
+                                        "link"=>"/investment/moutemplate",  
+                                        "permission_name"=>"moutemplate_page",                                 
+                                        "item_code"=>"MC-38-MI-02"
                                     ]
 
                                 ]

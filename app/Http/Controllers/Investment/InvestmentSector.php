@@ -8,7 +8,6 @@ use App\Models\Investment\InvestmentCommission;
 use App\Models\Base\Region;
 use App\Models\Investment\Sector;
 use DataTables;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
 use function Psy\debug;
@@ -29,24 +28,15 @@ class InvestmentSector extends Controller
         
     }
     
-    public function addSector(Request $request)
+    public function addCategory(Request $request)
     {
-       /*  $this->validate($request, [
+        $this->validate($request, [
         		'name' => 'required',
-                'type' => 'required',
-        	]); */
-            //$pname = DB::table('lr_investment_sector')->where('name', $request->parent_name)->get();
-            $sector = new Sector();
-            $sector->parent_id = $request->selectSector_id;
-            $sector->type = $request->type;
-            $sector->name = $request->name;
-            $sector->added_by = Auth::user()->id;
-            $sector->status = 1;
-            $sector->save();
-       /*  $input = $request->all();
+        	]);
+        $input = $request->all();
         $input['parent_id'] = empty($input['parent_id']) ? 0 : $input['parent_id'];
         
-        Sector::create($input); */
+        Sector::create($input);
         return back()->with('success', 'New sector added successfully.');
     }
 
@@ -81,5 +71,75 @@ class InvestmentSector extends Controller
                 ->with('success', 'Investment Commission updated successfully.');
     }
 
+
+    function submitInvestmentCommission(Request $request)
+    {
+        /* if(!Auth::user() || !Auth::user()->hasPermissionWithName("register_other_visa"))
+        {
+            return "";
+        } */
+        $ismain=1;
+        $investmentCommision = new InvestmentCommission();
+        $investmentCommision->name=$request->name;
+        $investmentCommision->code=$request->code;
+        $investmentCommision->registered_by=Auth::user()->id;
+        $investmentCommision->type=$request->types;
+        $investmentCommision->region_id=$request->region;
+        $investmentCommision->is_main=$ismain;
+        $investmentCommision->created_at=$request->created_at;
+        $investmentCommision->save();
+      
+      return response()->json(['message' => 'Investment type registered successfully']);
+
+    }
+
+    function load_investmentCommission()
+    {
+       /*  if(!Auth::user() || !Auth::user()->hasPermissionWithName("view_users"))
+        {
+            return "";
+        } */
+
+        
+        $investInfo = new InvestmentCommission();    
+        $data = $investInfo->InvestmentCommissionNameandId();
+        //$data = InvestmentCommission::latest()->where('user_type','user')->orderBy("name","ASC")->get();
+
+        return FacadesDataTables::of($data)
+            ->addIndexColumn()
+
+            ->addColumn('name', function($row){
+              
+              
+                    return '<table><tr><td style="padding:0px;padding-left:15px">'.$row->name.'</td></tr></table>';
+
+             })
+            ->addColumn('code', function($row){
+                return '<table><tr><td style="padding:0px;padding-left:15px">'.$row->code.'</td></tr></table>';
+
+            })
+            ->addColumn('type', function($row){
+                return '<table><tr><td style="padding:0px;padding-left:15px">'.$row->type.'</td></tr></table>';
+
+             })
+            ->addColumn('region', function($row){
+                return '<table><tr><td style="padding:0px;padding-left:15px">'.$row->region.'</td></tr></table>';
+
+            })
+            ->addColumn('registered_by', function($row){
+                return '<table><tr><td style="padding:0px;padding-left:15px">'.$row->registered_by.'</td></tr></table>';
+
+            })
+            ->addColumn('status', function($row){
+                return '<table><tr><td style="padding:0px;padding-left:15px">'.$row->status.'</td></tr></table>';
+  
+            })
+
+
+            ->rawColumns(['name','code','type','region','registered_by','status'])
+
+            ->make(true);
+
+    }
    
 }

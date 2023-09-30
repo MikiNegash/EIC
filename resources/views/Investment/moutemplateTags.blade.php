@@ -47,30 +47,44 @@
     <button type="button" class="btn btn_primary" data-bs-toggle="modal" data-bs-target="#messageModal">
         <i class="bi bi-plus"></i> New
     </button>
+    @if(session('succ'))
+    <div id="alert" class="alert alert-success alert-dismissable" role="alertdialog">
+        {{ session('succ') }}
+    </div>
+    @endif
+
+    @if(session('saved'))
+    <div id="alert" class="alert alert-success alert-dismissable" role="alertdialog">
+        {{ session('saved') }}
+    </div>
+    @endif
+    @if (session('success'))
+    <div id="alert" class="alert alert-success alert-dismissable" role="alertdialog">
+        {{ session('success') }}
+    </div>
+    @endif
     <div class="card " style="margin-top: 10px;">
         <div class="card-header">
             <div class="card-title">
-                <h5> <small>Registered Investment Commissions</small> </h5>
+                <h5> <small>Registered Mou template Tags</small> </h5>
 
             </div>
 
         </div>
+
         <div class="card-body">
 
             <div class="table-responsive mt-1 pb-3" style='width:100%'>
-                <table id="coms_table" class="table text-nowrap user_table vertical-top">
+                <table id="com_table" class="table text-nowrap user_table vertical-top">
                     <thead>
                         <tr>
-
                             <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Code</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Tag</th>
                             <th scope="col">Type</th>
-                            <th scope="col">Region</th>
-                            <th scope="col">Registered by</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Added by</th>
+                            <th scope="col">Updated by</th>
                             <th scope="col"></th>
-
                         </tr>
                     </thead>
                 </table>
@@ -78,123 +92,95 @@
         </div>
     </div>
 </div>
+<!-- insert modal -->
 <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="messageModalLabel"><small>Investment Commission Regstration</small> </h5>
+                <h5 class="modal-title" id="messageModalLabel"><small>Mou Template Tag Regstration</small> </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="messageModalBody">
 
-                <form id="invest_form" method="POST" action="/investment/icvs">
+                <form id="invest_form" method="POST" action="/investment/registerMoutemplate">
                     @csrf
                     <div class="row gy-3">
                         <div class="col-xl-12">
-                            <label for="input-rounded1" class="form-label">Name</label>
-                            <input type="text" class="form-control col-xl-6" id="name" name="name" placeholder="please enter name">
-                            @error('name')
+                            <label for="input-rounded1" class="form-label">Title</label>
+                            <input type="text" class="form-control col-xl-6" id="title" name="title" placeholder="please enter title">
+                            @error('title')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-xl-12">
-                            <label for="input-rounded2" class="form-label">Code</label>
-                            <input type="text" class="form-control border-dotted" id="code" name="code" placeholder="please enter Code">
+                            <label for="input-rounded2" class="form-label">Tag</label>
+                            <input type="text" class="form-control border-dotted" id="tag" name="tag" placeholder="please enter Tag">
                             @error('code')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-xl-12">
                             <label for="input-rounded3" class="form-label">Type</label>
-                            <input type="text" class="form-control border-dashed" id="types" name="types" placeholder="please enter Type">
+                            <input type="text" class="form-control border-dashed" id="type" name="type" placeholder="please enter Type">
                             @error('type')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-xl-12">
-                            <label for="input-rounded2" class="form-label">Region</label>
-                            <div class="input-group">
-                                <select class="form-select  validate-select" id="region" name="region">
-                                    <option value="">Select a Region</option>
-                                    @foreach ($regions as $region)
-                                    <option value="{{ $region->id }}">{{ $region->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('region')
-                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-
                         <div class="col-xl-3">
                             <button type="submit" class="btn btn-success btn-wave">Submit</button>
                         </div>
                     </div>
-
                 </form>
-
             </div>
-
         </div>
     </div>
 </div>
-<!-- Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<!-- end insert modal -->
+<!-- edit modal -->
+<div class="modal fade" id="editMouModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel"><small>Edit Investment commission</small></h5>
+                <h5 class="modal-title" id="editModalLabel"><small>Edit Mou Template</small></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editCommisionForm" method="POST" action="/investment/invComupdate">
+                <form id="editCommisionForm" method="POST" action="/investment/updatemoutemplate">
                     @csrf
                     <div class="row gy-3">
                         <div class="col-xl-12">
-                            <label for="input-rounded1" class="form-label">Name</label>
-                            <input type="text" class="form-control col-xl-6" id="edit_name" name="edit_name" placeholder="please enter name">
+                            <label for="input-rounded1" class="form-label">Title</label>
+                            <input type="text" class="form-control col-xl-6" id="edit_title" name="edit_title" placeholder="please enter title">
                             @error('name')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-xl-12">
-                            <label for="input-rounded2" class="form-label">Code</label>
-                            <input type="text" class="form-control border-dotted" id="edit_code" name="edit_code" placeholder="please enter Code">
+                            <label for="input-rounded2" class="form-label">Tag</label>
+                            <input type="text" class="form-control border-dotted" id="edit_tag" name="edit_tag" placeholder="please enter tag">
                             @error('code')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-xl-12">
                             <label for="input-rounded3" class="form-label">Type</label>
-                            <input type="text" class="form-control border-dashed" id="edit_types" name="edit_types" placeholder="please enter Type">
+                            <input type="text" class="form-control border-dashed" id="edit_type" name="edit_type" placeholder="please enter Type">
                             @error('type')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-xl-12">
-                            <label for="input-rounded2" class="form-label">Region</label>
-                            <div class="input-group">
-                                <select class="form-select  validate-select" id="edit_region" name="edit_region">
-                                    <option value="">Select a Region</option>
-                                    @foreach ($regions as $region)
-                                    <option value="{{ $region->id }}">{{ $region->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('region')
-                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+
 
                     </div>
                     <input type="hidden" name="edit_id" id="edit_id">
 
 
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" id="btnUpdate" name="btnUpdate">Edit</button>
+
             </div>
             </form>
         </div>
@@ -217,7 +203,7 @@
             </div>
         </div>
     </div>
-    <!-- edit modal end -->
+    <!-- end edit modal -->
     <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -236,12 +222,15 @@
     </div>
 
     <script>
-        $('#coms_table').DataTable({
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 3000);
+        $('#com_table').DataTable({
             processing: true,
             serverSide: true,
             responsive: true,
             ajax: {
-                url: '/investment/load',
+                url: '/investment/loadtemplate',
                 type: 'get',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -252,28 +241,25 @@
                     name: 'id'
                 },
                 {
-                    data: 'name',
-                    name: 'name'
+                    data: 'title',
+                    name: 'title'
                 },
                 {
-                    data: 'code',
-                    name: 'code'
+                    data: 'tag',
+                    name: 'tag'
                 },
                 {
                     data: 'type',
                     name: 'type'
                 },
+
                 {
-                    data: 'region_id',
-                    name: 'region'
+                    data: 'added_by',
+                    name: 'Auth::user()->name'
                 },
                 {
-                    data: 'registered_by',
-                    name: 'registered_by'
-                },
-                {
-                    data: 'status',
-                    name: 'status'
+                    data: 'updated_by',
+                    name: 'updated_by'
                 },
 
                 {
@@ -283,7 +269,7 @@
                         Edit = '<button class="btn btn-sm btn_primary edit-com" data-id="' + row.id + '">Edit</button>';
                         /* Delete ='<a class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i></a>' */
 
-                        Delete = '<button class="btn btn-sm btn-danger delete-com" data-id="' + row.id + '">Delete</button>';
+                        Delete = '<button class="btn btn-sm btn-danger delete-com" onClick="showDeleteConfirmation()" data-id="' + row.id + '">Delete</button>';
 
                         return Edit + " " + Delete;
                     }
@@ -299,7 +285,6 @@
             pagingType: 'full_numbers', // Style of pagination
         });
 
-
         document.getElementById("btnUpdate").addEventListener("click", function() {
             // Reset previous error messages
             console.log("Edit button clicked " + $('#edit_id').val())
@@ -307,21 +292,21 @@
             var formData = {
                 _token: '{{ csrf_token() }}',
                 id: $('#edit_id').val(),
-                name: $('#edit_name').val(),
-                code: $('#edit_code').val(),
+                title: $('#edit_title').val(),
+                tag: $('#edit_tag').val(),
                 type: $('#edit_type').val(),
-                region: $('#edit_region').val(),
             };
 
             $.ajax({
                 type: 'POST',
-                url: '/investment/invComupdate', // The route to handle the item update on the server
+                url: '/investment/updatemoutemplate', // The route to handle the item update on the server
                 data: formData,
                 success: function(response) {
                     console.log(response);
+                    // Show success message
                     showSuccessMessage(response.message);
-                    $('#editModal').modal('hide'); // Hide the modal after successful update
-                    $('#coms_table').DataTable().ajax.reload();
+                    $('#editMouModal').modal('hide'); // Hide the modal after successful update
+                    $('#com_table').DataTable().ajax.reload();
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {
@@ -336,28 +321,29 @@
 
         /*  $('#btnUpdate').onClick(); */
 
-        $('#coms_table').on('click', '.edit-com', function() {
+        $('#com_table').on('click', '.edit-com', function() {
             var row = $(this).closest('tr');
             var editId = row.find('td:eq(0)').text(); // Get the item ID from the first column
-            var editName = row.find('td:eq(1)').text(); // Get the item name from the second column
-            var editcode = row.find('td:eq(3)').text();
-            var edittype = row.find('td:eq(5)').text();
-            var editregion = row.find('td:eq(4)').text();
+            var editTitle = row.find('td:eq(1)').text(); // Get the item name from the second column
+            var editTag = row.find('td:eq(2)').text();
+            var editType = row.find('td:eq(3)').text();
             // Populate the modal form fields
             $('#edit_id').val(editId); // Set the item ID in the hidden form field
-            $('#edit_name').val(editName); // Set the item name in the input field
-            $('#edit_code').val(editcode);
-            $('#edit_types').val(edittype);
-            $('#edit_region').val(editregion);
-            $('#editModal').modal('show'); // Show the modal
+            $('#edit_title').val(editTitle); // Set the item name in the input field
+            $('#edit_tag').val(editTag);
+            $('#edit_type').val(editType);
+            $('#editMouModal').modal('show'); // Show the modal
+
+            
         });
 
         // Close Modal Event Handler
-        $('#editModal').on('hidden.bs.modal', function(e) {
+        $('#editMouModal').on('hidden.bs.modal', function(e) {
             // Clear the modal form fields when the modal is closed
             $('#editCommisionForm')[0].reset();
         });
 
+        // In your JavaScript
 
         function showSuccessMessage(message) {
             $('#messageModalLabel').text('Success');
@@ -371,33 +357,38 @@
             $('#messageModal').modal('show');
         }
 
-        $('#coms_table').on('click', '.delete-com', function() {
-            // var itemId = $(this).data('id');
-            console.log('delete btn is clicked')
+        function showDeleteConfirmation() {
+            // Display the confirmation modal
+            if (confirm('Are you sure you want to delete this record?')) {
+                // If confirmed, make an AJAX request to delete the record
+            
+            }
+        }
+        $('#com_table').on('click', '.delete-com', function() {
 
-            $('#deleteConfirmationModal').modal('show');
-            $('#deleteConfirmationModal').on('hidden.bs.modal', function(e) {
-                // Clear the modal form fields when the modal is closed
-                //  $('#editCommisionForm')[0].reset();
+            console.log('delete btn is clicked')
+            var id = $(this).data("id");
+            var token = $("meta[name='csrf-token']").attr("content");
+
+            $.ajax({
+                _token: '{{ csrf_token() }}',
+                url: '/investment/' + id,
+                type: 'delete',
+                data: {
+                    "id": id,
+                    "_token": token,
+                },
+                success: function(response) {
+                    console.log("it Works");
+                    if (response.success) {
+                        $('#com_table').DataTable().ajax.reload();
+                    }
+
+                },
+                error: function(xhr) {
+                    // Handle errors here
+                }
             });
-            // Display a confirmation prompt before deleting the item
-            // showDeleteConfirmation(function () {
-            // If the user confirms, proceed with the deletion
-            /*  $.ajax({
-                 type: 'get',
-                 url: '/delete/items/' + itemId,
-                 data: {
-                     _token: '{{ csrf_token() }}'
-                 },
-                 success: function (response) {
-                     showSuccessMessage("Item Deleted Successfully");
-                     $('#itemsTable').DataTable().ajax.reload();
-                 },
-                 error: function (xhr) {
-                     showErrorMessage('Error occurred during Item deletion.');
-                 }
-             }); */
-            // })
         });
     </script>
 

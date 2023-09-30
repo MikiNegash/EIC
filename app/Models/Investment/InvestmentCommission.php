@@ -11,9 +11,9 @@ class InvestmentCommission extends Model
     protected $table='investment_commissions';
     protected $id='id'; 
     protected $fillable = ['is_main','name','code','registered_by','updated_by','status','statusChangedBy','type','created_at','updated_at','region_id'];
-    public function CommissionLicenceSector()
+    public function Investment()
     {
-        return $this->belongsTo(CommissionLicenceSector::class,'id','investment_commission_id');
+        return $this->belongsTo(Investment::class,'investment_id','id');
     }
 
     public function InvestmentCommissionNameandId()

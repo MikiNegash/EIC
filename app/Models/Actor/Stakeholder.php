@@ -19,9 +19,4 @@ class Stakeholder extends Model
     {
         return $this->belongsTo(User::class,'added_by','id');
     }
-
-    public function StakeholderAll()
-    {
-        return self::all(['id','name','main_id']);
-    }
 }
