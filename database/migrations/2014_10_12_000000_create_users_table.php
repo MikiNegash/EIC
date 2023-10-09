@@ -11,31 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('investment_commissions', function (Blueprint $table) {
-            $table->increments("id");
-            $table->string('name');
-            $table->string('code');
-            $table->unsignedInteger('registered_by');
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->boolean('status')->default(0);
-            $table->unsignedInteger('statusChangedBy')->nullable();
-            $table->string('type');  // federal or regional
-            $table->unsignedInteger('region_id')->nullable();
-            $table->boolean('is_main')->default(0);
-            $table->timestamps();
-        });
-
-
-        Schema::create('commission_licence_sector', function (Blueprint $table) {
-            $table->increments("id");
-            $table->unsignedInteger('investment_commission_id');
-            $table->unsignedInteger('subsector_id');
-            $table->unsignedInteger('added_by');
-            $table->timestamps();
-        });
-
-
-
         Schema::create('users', function (Blueprint $table) {
             $table->increments("id");
             $table->string('name');
@@ -43,12 +18,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->date('last_login')->nullable();
-            $table->string('user_type')->default('investor'); // investor or user or admin or superadmin
+            $table->string('user_type')->default('investor');
             $table->string('signature')->nullable();  // file where the signature saved
             $table->boolean('status')->default(0);
-            $table->unsignedInteger('investment_commission_id')->nullable();
-            $table->unsignedInteger('stakeholder_id')->nullable(); // if it is representative of stakeholder
-            $table->unsignedInteger('stakeholder_assigned_by')->nullable();
             $table->unsignedInteger('added_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->unsignedInteger('statusChangedBy')->nullable();
@@ -104,6 +76,7 @@ return new class extends Migration
             $table->unsignedInteger('permission_id');
             $table->unsignedInteger('added_by');
             $table->timestamps();
+
         });
 
         Schema::create('user_role', function (Blueprint $table) {
@@ -112,6 +85,7 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('added_by');
             $table->timestamps();
+
         });
 
         Schema::create('user_permissions', function (Blueprint $table) {
@@ -121,6 +95,7 @@ return new class extends Migration
             $table->boolean('status')->default(1); // for permission that allowed or disallowed
             $table->unsignedInteger('added_by');
             $table->timestamps();
+
         });
 
         Schema::create('sidebar_menu', function (Blueprint $table) {
@@ -153,20 +128,39 @@ return new class extends Migration
             $table->string('photo');
             $table->string('id_card')->nullable();
             $table->string('passport')->nullable();
-            $table->string('business_license')->nullable();
-            $table->string('moa')->nullable();
-            $table->string('bank_statement')->nullable();
             $table->timestamps();
         });
 
-
+        Schema::create('investor_files', function (Blueprint $table) {
+            $table->increments("id");
+            $table->unsignedInteger('investor_id');
+            $table->string('work_permit_file')->nullable();
+            $table->date('wp_expired_date')->nullable();
+            $table->boolean('wp_status')->nullable();
+            $table->string('investment_permit_file')->nullable();
+            $table->date('ip_expired_date')->nullable();
+            $table->boolean('ip_status')->nullable();
+            $table->string('residence_permit_file')->nullable();
+            $table->date('rp_expired_date')->nullable();
+            $table->boolean('rp_status')->nullable();
+            $table->string('visa_type')->nullable();
+            $table->date('visa_file')->nullable();
+            $table->string('visa_code')->nullable();
+            $table->timestamps();
+        });
 
 
         Schema::create('main_stakeholders', function (Blueprint $table)
         {
             $table->increments("id");
             $table->string('name');
+            $table->string('label');
+            $table->string('address');
             $table->string('code');
+            $table->string('api_link')->nullable();
+            $table->string('api_token')->nullable();
+            $table->string('key')->nullable();
+            $table->string('data_format')->nullable(); // json or xml
             $table->timestamps();
         });
 

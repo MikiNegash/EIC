@@ -12,50 +12,30 @@ use Illuminate\Database\Eloquent\Model;
 class Investment extends Model
 {
     use HasFactory;
-    protected $table='investments';
+    protected $table='lr_investments';
     protected $id='id';
-    protected $fillable = ['investment_type_id','company_name_id','company_name_status','shareholder_or_not','typ_of_ownership','trade_name','business_type_id',
-                            'manager_id','created_by','attorney_id','reviewed_by','review_status','approved_by','approve_status',
-                            'comment','payment_id','license_file','license_prepared_by','issued_date','expired_date','license_code',
-                            'investment_status','status_changed_by','created_at','updated_at'];
-    public function InvestmentType()
-    {
-        return $this->belongsTo(InvestmentType::class,'investment_type_id','id');
-    }
-    public function CompanyName()
-    {
-        return $this->belongsTo(CompanyName::class,'company_id','id');
-    }
-    public function Manager()
-    {
-        return $this->belongsTo(Customer::class,'manager_id','id');
-    }
+    protected $fillable = ['investment_type','company_name','trade_name','ownership','foreign_company_id','info_source','capital',
+                            'share_value','created_by','subsector_id','commission_id','bank_id','is_closed','status_changed_by',
+                            'remark','created_at','updated_at'];
+      
     public function CreatedBy()
     {
         return $this->belongsTo(User::class,'created_by','id');
     }
-    public function ReviewedBy()
+    public function SubSector()
     {
-        return $this->belongsTo(User::class,'reviewed_by','id');
+        return $this->belongsTo(Sector::class,'subsector_id','id');
     }
-    public function ApprovedBy()
+    public function Commission()
     {
-        return $this->belongsTo(User::class,'approved_by','id');
+        return $this->belongsTo(InvestmentCommission::class,'commission_id','id');
     }
-    public function Payment()
+
+    public function InvestmentAll()
     {
-        return $this->belongsTo(Payment::class,'payment_id','id');
+        return $this->all(['id','investment_type','company_name','trade_name','ownership','foreign_company_id','info_source','capital',
+        'share_value','created_by','subsector_id','commission_id','bank_id','is_closed','status_changed_by',
+        'remark','created_at','updated_at']);
     }
-    public function LicensePreparedBy()
-    {
-        return $this->belongsTo(User::class,'license_prepared_by','id');
-    }
-    public function StatusChangedBy()
-    {
-        return $this->belongsTo(User::class,'status_changed_by','id');
-    }
-    public function Attorney()
-    {
-        return $this->belongsTo(Company_representative::class,'attorney_id','id');
-    }
+
 }

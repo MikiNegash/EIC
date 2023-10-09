@@ -18,9 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('type');
             $table->unsignedInteger('sector_id');
-            $table->boolean('is_approved');
-            $table->unsignedInteger('created_by')->nullable();
-            $table->unsignedInteger('updated_by')->nullable();
+            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('updated_by');
             $table->timestamps();
         });
 
@@ -28,9 +27,8 @@ return new class extends Migration
         Schema::create('measurement_unit', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->boolean('is_approved');
-            $table->unsignedInteger('created_by')->nullable();
-            $table->unsignedInteger('updated_by')->nullable();
+            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('updated_by');
             $table->timestamps();
         });
 

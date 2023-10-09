@@ -37,35 +37,17 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('LR_mou_template_section', function (Blueprint $table) {
+        Schema::create('LR_mou_template', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("type");    // bipartite or tripartite or quadripartite
+            $table->string("type")->nullable();    // bipartite or tripartite or quadripartite
             $table->string("title");
-            $table->string("content");
+            $table->string("parent_id")->nullable();
+            $table->text("content");
             $table->integer("order_num");
             $table->unsignedInteger("added_by");
             $table->unsignedInteger("updated_by")->nullable();
         });
 
-        Schema::create('LR_mou_template_subsection', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string("title");
-            $table->string("content");
-            $table->integer("order_num");
-            $table->unsignedInteger("section_id");
-            $table->unsignedInteger("added_by");
-            $table->unsignedInteger("updated_by")->nullable();
-        });
-
-        Schema::create('LR_mou_template_subsubsection', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string("title");
-            $table->string("content");
-            $table->integer("order_num");
-            $table->unsignedInteger("subsection_id");
-            $table->unsignedInteger("added_by");
-            $table->unsignedInteger("updated_by")->nullable();
-        });
 
         Schema::create('LR_moa_template_tags', function (Blueprint $table) {
             $table->increments('id');
@@ -234,6 +216,7 @@ return new class extends Migration
             $table->unsignedInteger("board_representative_id")->nullable();
             $table->string("board_comment")->nullable();
             $table->date("board_approved_date")->nullable();
+            $table->string("board_minute")->nullable();
 
 
 

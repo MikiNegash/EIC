@@ -10,16 +10,18 @@ use App\Http\Controllers\Basic\ItemsManagement;
 use App\Http\Controllers\Basic\MeasurmentsManagement;
 use App\Http\Controllers\Actor\UsersController;
 use App\Http\Controllers\Actor\TempController;
+use App\Http\Controllers\Investment\IndustryPark;
 use App\Http\Controllers\Investment\InvestmentTypeController;
 use App\Http\Controllers\Services\VIPServiceController;
 use App\Http\Controllers\Investment\InvestmentRegistration;
 use App\Http\Controllers\Investment\InvestmentCommissonRegistration;
 use App\Http\Controllers\Investment\InvestmentSector;
-use App\Http\Controllers\Investment\MouTemplateTagsRegistration;
 use App\Http\Controllers\PublicPage\publicPageController;
+use App\Http\Controllers\Investment\AssignSectorController;
+use App\Http\Controllers\Investment\InvestmentController;
+use App\Http\Controllers\Investment\MouTemplateTagsRegistration;
 use App\Http\Controllers\Investment\PDFController;
-
-
+use App\Models\Investment\Investment;
 
     //
     // Address Management
@@ -130,46 +132,76 @@ Route::controller(RegisterRegionAndZone::class)->group(function()
     { 
         
         Route::post('/investment/invComupdate', 'update_invCom');
-        Route::get('/investment/load', 'load_investmentCommission')->middleware("permission:Investment_commission_page");
-        Route::get('/investment/icv', 'displayInvestmentRegistrationPage')->middleware("permission:Investment_commission_page")->name('invest.view');
-        Route::post('/investment/icvs', 'submitInvestmentCommission')->middleware("permission:Investment_commission_page");
-        Route::post('/investment/request_and_view_investment', 'RequestInvestmentRegistration')->middleware("permission:request_investment_registration");       
+        Route::get('/investment/load', 'load_investmentCommission');
+        Route::get('/investment/icv', 'displayInvestmentRegistrationPage')->name('invest.view');
+        Route::post('/investment/icvs', 'submitInvestmentCommission');  
     })->middleware('auth');
-
-
+    //Investment Sector
     Route::controller(InvestmentSector::class)->group(function()
     { 
         
         Route::post('/investment/invSector', 'update_invCom');
-        Route::get('/investment/loadinvSector', 'load_investmentSector')->middleware("permission:Investment_commission_page");
-        Route::get('/investment/Sector', 'displayinvestmentSector')->middleware("permission:Investment_commission_page");
-        Route::post('/investment/addCategory', 'addCategory')->middleware("permission:Investment_commission_page")->name('invest.sector');;
-        Route::post('/investment/request_and_view_investment', 'RequestInvestmentRegistration')->middleware("permission:request_investment_registration");       
+        Route::get('/investment/loadinvSector', 'load_investmentSector');
+        Route::get('/investment/Sector', 'displayinvestmentSector');
+        Route::post('/investment/addSector', 'addSector')->name('invest.sector');   
     })->middleware('auth');
 
-    Route::controller(MouTemplateTagsRegistration::class)->group(function()
-    { 
-        Route::post('/investment/updatemoutemplate', 'update_MoutemplateTag');
-        Route::delete('/investment/{id}', 'deleteMoutemplatetag');
-        Route::post('/investment/registerMoutemplate', 'submitMoutemplateTag');
-        Route::get('/investment/loadtemplate', 'load_moutemplateTag');
-        Route::get('/investment/moutemplate', 'displayMoutemplatePage')->name('moutemplate');  
-       
-   
-    })->middleware('auth');
+     //Investment Park
+     Route::controller(IndustryPark::class)->group(function()
+     { 
+         Route::post('/investment/invSector', 'update_invCom');
+         Route::get('/investment/loadStakeholder', 'load_investmentSector');
+         Route::get('/investment/loadInsustyPark', 'load_IndustyPark');
+         Route::post('/investment/loadzones', 'zoneRender');
+         Route::post('/investment/loadworeda', 'woredaRender');
+         Route::get('/investment/park', 'displayIndustryParkPage')->name('invest.park');
+         Route::post('/investment/parkSubmit', 'submitIndustryPark');     
+     })->middleware('auth');
 
-    Route::controller(PDFController::class)->group(function()
-    {    
-        Route::get('/investment/templateTag', 'index');
-        Route::get('/investment/create-pdf-file', 'index');
-        Route::get('/investment/viewtemplate', 'listtemplateTags');
-        Route::get('/investment/generate-pdf', 'index')->name('generate.pdf');
-        Route::post('/investment/process-dropdown', 'DropdownController@process')->name('process.dropdown');
+      //Commission with sector
+      Route::controller(AssignSectorController::class)->group(function()
+      { 
+          Route::post('/investment/invSector', 'update_invCom');
+          Route::get('/investment/loadStakeholder', 'load_investmentSector');
+          Route::get('/investment/loadComSector', 'load_AssignedSector');
+          Route::get('/investment/viewSector', 'view_sector');
+          Route::post('/investment/assignSectorSubmit', 'submitSector');
+          Route::delete('/investment/delSector/{delName}', 'deleteSector');
+          Route::get('/investment/assignSector', 'displayAssignSectorPage');
+          Route::post('/investment/parkSubmit', 'submitIndustryPark');  
+      })->middleware('auth');
+      Route::controller(MouTemplateTagsRegistration::class)->group(function()
+      { 
+          Route::post('/investment/updatemoutemplate', 'update_MoutemplateTag');
+          Route::delete('/investment/{id}', 'deleteMoutemplatetag');
+          Route::post('/investment/registerMoutemplate', 'submitMoutemplateTag');
+          Route::get('/investment/loadtemplate', 'load_moutemplateTag');
+          Route::get('/investment/moutemplate', 'displayMoutemplatePage')->name('moutemplate');  
+         
+     
+      })->middleware('auth');
+  
+      Route::controller(PDFController::class)->group(function()
+      {    
+          Route::get('/investment/templateTag', 'index');
+          Route::get('/investment/create-pdf-file', 'index');
+          Route::get('/investment/viewtemplate', 'listtemplateTags');
+          Route::get('/investment/generate-pdf', 'index')->name('generate.pdf');
+          Route::post('/investment/process-dropdown', 'DropdownController@process')->name('process.dropdown');
+  
+     
+      })->middleware('auth');
 
-   
-    })->middleware('auth');
-
-    
+      //Investment
+      Route::controller(InvestmentController::class)->group(function()
+      {    
+        Route::get('/investment/applyLicense', 'displayInvestmentPage');
+        Route::get('/investment/loadInvest', 'load_Investment');
+        Route::get('/investment/loadproject', 'load_ProjectActions');
+        Route::get('/investment/checkBranch', 'checkBranch');
+  
+     
+      })->middleware('auth');
 use App\Http\Controllers\Basic\OtherVisaController;
 
 use App\Http\Controllers\Letter\LetterController;

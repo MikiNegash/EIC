@@ -17,6 +17,8 @@ return new class extends Migration
             $table->increments('id');
             $table->string('code')->unique();
             $table->string('description');
+            $table->string('letter_type');    //incoming or outgoing
+            $table->string('with_whom');      //investor or stakeholder or investment  to identify communication with whom
             $table->text('template_subject')->nullable();
             $table->text('template_content')->nullable();
             $table->string('template_closure')->nullable();
@@ -30,6 +32,7 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('letter_code_id');
             $table->unsignedInteger('stakeholder_id')->nullable();
+            $table->unsignedInteger('main_stakeholder_id')->nullable();
             $table->timestamps();
         });
 

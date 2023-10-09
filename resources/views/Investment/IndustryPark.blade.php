@@ -45,12 +45,12 @@
 </style>
 <div class="container" id="generalForm">
     <button type="button" class="btn btn_primary" data-bs-toggle="modal" data-bs-target="#messageModal">
-    <i class="bi bi-plus"></i> New
+        <i class="bi bi-plus"></i> New
     </button>
     <div class="card " style="margin-top: 10px;">
         <div class="card-header">
             <div class="card-title">
-                <h5> <small>Registered Investment Commissions</small> </h5>
+                <h5> <small>Registered Industrial Parks</small> </h5>
 
             </div>
 
@@ -64,28 +64,15 @@
 
                             <th scope="col">#</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Code</th>
-                            <th scope="col">Type</th>
                             <th scope="col">Region</th>
+                            <th scope="col">Zone</th>
+                            <th scope="col">Woreda</th>
                             <th scope="col">Registered by</th>
                             <th scope="col">Status</th>
                             <th scope="col"></th>
 
                         </tr>
                     </thead>
-
-                    <!--    @foreach($coms as $c)
-                        <tr>
-                            <td></td>
-                            <td>{{$c->name}}</td>
-                            <td>{{$c->code}}</td>
-                            <td>{{$c->type}}</td>
-                            <td>{{$c->region}}</td>
-                            <td>{{$c->registered_by}}</td>
-                            <td>{{$c->status}}</td>
-                            <td></td>
-                        </tr>
-                        @endforeach -->
 
                 </table>
             </div>
@@ -101,7 +88,7 @@
             </div>
             <div class="modal-body" id="messageModalBody">
 
-                <form id="invest_form" method="POST" action="/investment/icvs">
+                <form id="invest_form" method="POST" action="/investment/parkSubmit">
                     @csrf
                     <div class="row gy-3">
                         <div class="col-xl-12">
@@ -112,18 +99,18 @@
                             @enderror
                         </div>
                         <div class="col-xl-12">
-                            <label for="input-rounded2" class="form-label">Code</label>
-                            <input type="text" class="form-control border-dotted" id="code" name="code" placeholder="please enter Code">
-                            @error('code')
-                            <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-xl-12">
-                            <label for="input-rounded3" class="form-label">Type</label>
-                            <input type="text" class="form-control border-dashed" id="types" name="types" placeholder="please enter Type">
-                            @error('type')
-                            <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                            @enderror
+                            <label for="input-rounded2" class="form-label">Stakeholder</label>
+                            <div class="input-group">
+                                <select class="form-select  validate-select" id="stakeholder" name="stakeholder">
+                                    <option value="">Select a stakeholder</option>
+                                    @foreach ($stakeholders as $stake)
+                                    <option value="{{ $stake->id }}">{{ $stake->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('region')
+                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                         <div class="col-xl-12">
                             <label for="input-rounded2" class="form-label">Region</label>
@@ -139,10 +126,34 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-xl-12">
+                            <label for="input-rounded3" class="form-label">Zone</label>
+                            <div class="input-group">
+                                <select class="form-select  validate-select" id="zone" name="zone">
+                                    <option value="">Select Zone</option>
+
+                                </select>
+                                @error('region')
+                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
+                            <label for="input-rounded2" class="form-label">Woreda</label>
+                            <div class="input-group">
+                                <select class="form-select  validate-select" id="woreda" name="woreda">
+                                    <option value="">Select Woreda</option>
+
+                                </select>
+                                @error('region')
+                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
 
                         <div class="col-xl-3">
-                            <button type="submit" class="btn btn-success btn-wave">Submit</button>
+                            <button id='btn_save' type="button" class="btn btn-success btn-wave">Submit</button>
                         </div>
                     </div>
 
@@ -157,38 +168,38 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel"><small>Edit Investment commission</small></h5>
+                <h5 class="modal-title" id="editModalLabel"><small>Edit Industry Park</small></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editCommisionForm" method="POST" action="/investment/invComupdate">
-                @csrf
+                <form id="editCommisionForm" method="POST" action="/investment/invSector">
+                    @csrf
                     <div class="row gy-3">
                         <div class="col-xl-12">
                             <label for="input-rounded1" class="form-label">Name</label>
-                            <input type="text" class="form-control col-xl-6" id="edit_name" name="edit_name" placeholder="please enter name">
+                            <input type="text" class="form-control col-xl-6" id="edit_name" name="name" placeholder="please enter name">
                             @error('name')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-xl-12">
-                            <label for="input-rounded2" class="form-label">Code</label>
-                            <input type="text" class="form-control border-dotted" id="edit_code" name="edit_code" placeholder="please enter Code">
-                            @error('code')
-                            <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-xl-12">
-                            <label for="input-rounded3" class="form-label">Type</label>
-                            <input type="text" class="form-control border-dashed" id="edit_types" name="edit_types" placeholder="please enter Type">
-                            @error('type')
-                            <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                            @enderror
+                            <label for="input-rounded2" class="form-label">Stakeholder</label>
+                            <div class="input-group">
+                                <select class="form-select  validate-select" id="edit_stakeholder" name="stakeholder">
+                                    <option value="">Select a stakeholder</option>
+                                    @foreach ($stakeholders as $stake)
+                                    <option value="{{ $stake->id }}">{{ $stake->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('region')
+                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                         <div class="col-xl-12">
                             <label for="input-rounded2" class="form-label">Region</label>
                             <div class="input-group">
-                                <select class="form-select  validate-select" id="edit_region" name="edit_region">
+                                <select class="form-select  validate-select" id="edit_region" name="region">
                                     <option value="">Select a Region</option>
                                     @foreach ($regions as $region)
                                     <option value="{{ $region->id }}">{{ $region->name }}</option>
@@ -199,11 +210,36 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-xl-12">
+                            <label for="input-rounded3" class="form-label">Zone</label>
+                            <div class="input-group">
+                                <select class="form-select  validate-select" id="edit_zone" name="zone">
+                                    <option value="">Select Zone</option>
 
-                    </div>
+                                </select>
+                                @error('region')
+                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
+                            <label for="input-rounded2" class="form-label">Woreda</label>
+                            <div class="input-group">
+                                <select class="form-select  validate-select" id="edit_woreda" name="woreda">
+                                    <option value="">Select Woreda</option>
+
+                                </select>
+                                @error('region')
+                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                   
+                   
                     <input type="hidden" name="edit_id" id="edit_id">
 
-               
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -212,24 +248,24 @@
             </form>
         </div>
     </div>
-    <div class="modal fade" id="deleteConfirmationModal"  tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" >Confirm Deletion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" >
-                Are you sure you want to delete this item?
-                <input type='hidden' id='deleteid'/>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this item?
+                    <input type='hidden' id='deleteid' />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -247,25 +283,21 @@
             </div>
         </div>
     </div>
-    
+
     <script>
-
-
-   
-    
-
-
         $('#coms_table').DataTable({
             processing: true,
             serverSide: true,
             responsive: true,
             ajax: {
-                url: '/investment/load',
+                url: '/investment/loadInsustyPark',
                 type: 'get',
                 data: {
                     _token: '{{ csrf_token() }}',
                 },
+
             },
+
             columns: [{
                     data: 'id',
                     name: 'id'
@@ -275,16 +307,16 @@
                     name: 'name'
                 },
                 {
-                    data: 'code',
-                    name: 'code'
+                    data: 'Region',
+                    name: 'Region'
                 },
                 {
-                    data: 'type',
-                    name: 'type'
+                    data: 'Zone',
+                    name: 'Zone'
                 },
                 {
-                    data: 'region_id',
-                    name: 'region'
+                    data: 'Woreda',
+                    name: 'Woreda'
                 },
                 {
                     data: 'registered_by',
@@ -298,7 +330,7 @@
                 {
                     data: null,
                     render: function(data, type, row) {
-                        
+
                         Edit = '<button class="btn btn-sm btn_primary edit-com" data-id="' + row.id + '">Edit</button>';
                         /* Delete ='<a class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i></a>' */
 
@@ -316,19 +348,20 @@
                 [10, 25, 50, 'All']
             ], // Dropdown options for rows per page
             pagingType: 'full_numbers', // Style of pagination
+
         });
 
 
         document.getElementById("btnUpdate").addEventListener("click", function() {
             // Reset previous error messages
-            console.log("Edit button clicked "+$('#edit_id').val())
+            console.log("Edit button clicked " + $('#edit_id').val())
             $('.error-message').empty();
             var formData = {
                 _token: '{{ csrf_token() }}',
                 id: $('#edit_id').val(),
                 name: $('#edit_name').val(),
-                code: $('#edit_code').val(),
-                type: $('#edit_type').val(),
+                woreda: $('#edit_woreda').val(),
+                stakeholder: $('#edit_stake').val(),
                 region: $('#edit_region').val(),
             };
 
@@ -354,21 +387,22 @@
             });
         });
 
-       /*  $('#btnUpdate').onClick(); */
+        /*  $('#btnUpdate').onClick(); */
 
         $('#coms_table').on('click', '.edit-com', function() {
             var row = $(this).closest('tr');
             var editId = row.find('td:eq(0)').text(); // Get the item ID from the first column
             var editName = row.find('td:eq(1)').text(); // Get the item name from the second column
-            var editcode = row.find('td:eq(3)').text();
-            var edittype = row.find('td:eq(5)').text();
-            var editregion = row.find('td:eq(4)').text();
+            var editregion = row.find('td:eq(3)').text();
+            var editzone = row.find('td:eq(5)').text();
+            var editworeda = row.find('td:eq(4)').text();
             // Populate the modal form fields
             $('#edit_id').val(editId); // Set the item ID in the hidden form field
             $('#edit_name').val(editName); // Set the item name in the input field
-            $('#edit_code').val(editcode);
-            $('#edit_types').val(edittype);
             $('#edit_region').val(editregion);
+            $('#edit_stake').append('<option value="'+editzone+'">' + editzone + '</option>');
+            $('#edit_zone').append('<option value="'+editzone+'">' + editzone + '</option>');
+            $('#edit_woreda').append('<option value="'+editworeda+'">' + editworeda + '</option>');
             $('#editModal').modal('show'); // Show the modal
         });
 
@@ -380,46 +414,127 @@
 
 
         function showSuccessMessage(message) {
-        $('#messageModalLabel').text('Success');
-        $('#messageModalBody').text(message);
-        $('#messageModal').modal('show');
-    }
-      function showErrorMessage(message) {
-        $('#messageModalLabel').text('Error');
-        $('#messageModalBody').text(message);
-        $('#messageModal').modal('show');
-    }
+            $('#messageModalLabel').text('Success');
+            $('#messageModalBody').text(message);
+            $('#messageModal').modal('show');
+        }
 
-        $('#coms_table').on('click', '.delete-com', function () {
-       // var itemId = $(this).data('id');
-       console.log('delete btn is clicked')
+        function showErrorMessage(message) {
+            $('#messageModalLabel').text('Error');
+            $('#messageModalBody').text(message);
+            $('#messageModal').modal('show');
+        }
 
-        $('#deleteConfirmationModal').modal('show');
-        $('#deleteConfirmationModal').on('hidden.bs.modal', function(e) {
-            // Clear the modal form fields when the modal is closed
-          //  $('#editCommisionForm')[0].reset();
-        });
-        // Display a confirmation prompt before deleting the item
-       // showDeleteConfirmation(function () {
+        $('#coms_table').on('click', '.delete-com', function() {
+            // var itemId = $(this).data('id');
+            console.log('delete btn is clicked')
+
+            $('#deleteConfirmationModal').modal('show');
+            $('#deleteConfirmationModal').on('hidden.bs.modal', function(e) {
+                // Clear the modal form fields when the modal is closed
+                //  $('#editCommisionForm')[0].reset();
+            });
+            // Display a confirmation prompt before deleting the item
+            // showDeleteConfirmation(function () {
             // If the user confirms, proceed with the deletion
-           /*  $.ajax({
-                type: 'get',
-                url: '/delete/items/' + itemId,
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    showSuccessMessage("Item Deleted Successfully");
-                    $('#itemsTable').DataTable().ajax.reload();
-                },
-                error: function (xhr) {
-                    showErrorMessage('Error occurred during Item deletion.');
-                }
-            }); */
-      // })
-    });
+            /*  $.ajax({
+                 type: 'get',
+                 url: '/delete/items/' + itemId,
+                 data: {
+                     _token: '{{ csrf_token() }}'
+                 },
+                 success: function (response) {
+                     showSuccessMessage("Item Deleted Successfully");
+                     $('#itemsTable').DataTable().ajax.reload();
+                 },
+                 error: function (xhr) {
+                     showErrorMessage('Error occurred during Item deletion.');
+                 }
+             }); */
+            // })
+        });
 
-   
+        $('#region').on('change', function(e) {
+
+            var region = e.target.value;
+            $.ajax({
+
+                url: "/investment/loadzones",
+                type: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    region_id: region
+                },
+
+                success: function(data) {
+                    console.log(JSON.stringify(data));
+                    $('#zone').empty();
+                    $('#zone').append('<option value="">' + 'select zone' + '</option>');
+                    $.each(data.zones, function(index, subcategory) {
+
+                        $('#zone').append('<option value="' + subcategory.id + '">' + subcategory.name + '</option>');
+                    })
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            })
+        });
+
+        $('#zone').on('change', function(e) {
+
+            var zone = e.target.value;
+            $.ajax({
+
+                url: "/investment/loadworeda",
+                type: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    zone_id: zone
+                },
+
+                success: function(data) {
+                    console.log(JSON.stringify(data));
+                    $('#woreda').empty();
+                    $('#woreda').append('<option value="">' + 'select woreda' + '</option>');
+                    $.each(data.woredas, function(index, woreda) {
+
+                        $('#woreda').append('<option value="' + woreda.id + '">' + woreda.name + '</option>');
+                    })
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            })
+        });
+
+        $('#btn_save').on('click', function(e) {
+
+            console.log('save btn is clicked')
+            var formData = {
+                _token: '{{ csrf_token() }}',
+                name: $('#name').val(),
+                stakeholder_id: $('#stakeholder').val(),
+                woreda_id: $('#woreda').val(),
+            };
+            console.log('FormData: '+formData.name+" "+formData.stakeholder_id+" "+formData.woreda_id);
+            $.ajax({
+                url: "/investment/parkSubmit",
+                type: "POST",
+                data: formData,
+
+                success: function(data) {
+                    console.log(JSON.stringify(data));
+                   // $('#woreda').empty();
+                    showSuccessMessage("Industry Park Registerd Successfully");
+                 
+                },
+                error: function(data) {
+                    console.log(data);
+                    showErrorMessage('Something occured please try again or contact administrator');
+                } 
+            })
+        });
     </script>
 
     @endsection

@@ -436,14 +436,39 @@ class DatabaseSeeder extends Seeder
                                         "title" => "Investment Commission",
                                         "link"=>"/investment/icv",  
                                         "permission_name"=>"Investment_commission_page",                                 
-                                        "item_code"=>"MC-37-MI-02"
+                                        "item_code"=>"MC-36-MI-02"
                                      ], 
                                      [
                                         "title" => "Template Tags",
                                         "link"=>"/investment/moutemplate",  
                                         "permission_name"=>"moutemplate_page",                                 
-                                        "item_code"=>"MC-38-MI-02"
+                                        "item_code"=>"MC-36-MI-03"
+                                     ],
+                                     [
+                                        "title" => "Industry Park",
+                                        "link"=>"/investment/park",  
+                                        "permission_name"=>"moutemplate_page",                                 
+                                        "item_code"=>"MC-36-MI-04"
+                                     ],
+                                     [
+                                        "title" => "Sector Registration",
+                                        "link"=>"/investment/Sector",  
+                                        "permission_name"=>"moutemplate_page",                                 
+                                        "item_code"=>"MC-36-MI-05"
                                     ]
+                                    ,
+                                     [
+                                        "title" => "Assign Sector",
+                                        "link"=>"/investment/assignSector",  
+                                        "permission_name"=>"moutemplate_page",                                 
+                                        "item_code"=>"MC-36-MI-06"
+                                    ],
+                                    [
+                                       "title" => "Template View", 
+                                       "link"=>"/investment/viewtemplate",  
+                                       "permission_name"=>"moutemplate_page",                                 
+                                       "item_code"=>"MC-36-MI-07"
+                                   ]
 
                                 ]
                     ],

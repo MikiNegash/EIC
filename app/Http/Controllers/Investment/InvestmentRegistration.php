@@ -35,10 +35,10 @@ class InvestmentRegistration extends Controller
 {
     public function displayInvestmentRegistrationPage()
     {
-        if(!Auth::user() || !Auth::user()->hasPermissionWithName("Investment_registration_page"))
+       /*  if(!Auth::user() || !Auth::user()->hasPermissionWithName("Investment_registration_page"))
         {
             return view("errors.role_permission_error");
-        }
+        } */
         // ShareHolder
         $shareholderInfo = new ShareHolder();
         $shareholders =  $shareholderInfo->CustomerNameandId();

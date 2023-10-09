@@ -11,23 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        Schema::table('investment_commissions', function (Blueprint $table)
-        {
-            $table->foreign('registered_by')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('updated_by')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('statusChangedBy')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('region_id')->references('id')->on('region')->onUpdate('cascade')->onDelete('cascade');
-        });
-
         Schema::table('users', function (Blueprint $table)
         {
             $table->foreign('added_by')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('updated_by')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('statusChangedBy')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('investment_commission_id')->references('id')->on('investment_commissions')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('stakeholder_id')->references('id')->on('stakeholders')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('stakeholder_assigned_by')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
 
         Schema::table('user_image', function (Blueprint $table) {
@@ -74,6 +62,13 @@ return new class extends Migration
         Schema::table('investors', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
         });
+
+        Schema::table('investor_files', function (Blueprint $table) {
+            $table->foreign('investor_id')->references('id')->on('investors');
+        });
+
+
+
 
         Schema::table('stakeholders', function (Blueprint $table) {
             $table->foreign('main_id')->references('id')->on('main_stakeholders')->onDelete('cascade');
@@ -134,22 +129,10 @@ return new class extends Migration
         });
 
 
-        Schema::table('LR_industrial_park', function (Blueprint $table) {
-            $table->foreign('stakeholder_id')->references('id')->on('stakeholders')->onDelete('cascade');
-            $table->foreign('woreda_id')->references('id')->on('woreda')->onDelete('cascade');
-            $table->foreign('added_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('statusChangedBy')->references('id')->on('users')->onDelete('cascade');
-        });
-
-
-
-
         Schema::table('LR_investment_sector', function (Blueprint $table) {
             $table->foreign('parent_id')->references('id')->on('LR_investment_sector')->onDelete('cascade');
             $table->foreign('added_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('statusChangedBy')->references('id')->on('users')->onDelete('cascade');
 
         });
 
@@ -183,21 +166,12 @@ return new class extends Migration
 
 
         Schema::table('LR_investments', function (Blueprint $table) {
+            $table->foreign('mou_id')->references('id')->on('LR_mou')->onDelete('cascade');
+            $table->foreign('summary_id')->references('id')->on('LR_project_summary')->onDelete('cascade');
             $table->foreign('activity_id')->references('id')->on('LR_investment_sector')->onDelete('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('commission_id')->references('id')->on('investment_commissions')->onDelete('cascade');
-            $table->foreign('bank_id')->references('id')->on('investment_commissions')->onDelete('cascade');
-
-            $table->foreign('expert_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('summary_id')->references('id')->on('LR_project_summary')->onDelete('cascade');
-            $table->foreign('team_leader_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('director_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('commissioner_id')->references('id')->on('users')->onDelete('cascade');
-
-
-            $table->foreign('mou_id')->references('id')->on('LR_mou')->onDelete('cascade');
-            $table->foreign('slip_approved_by')->references('id')->on('users')->onDelete('cascade');
-
+            $table->foreign('reviewed_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('approved_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('payment_id')->references('id')->on('payment')->onDelete('cascade');
             $table->foreign('license_prepared_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('status_changed_by')->references('id')->on('users')->onDelete('cascade');
@@ -219,22 +193,28 @@ return new class extends Migration
 
         Schema::table('LR_mou', function (Blueprint $table) {
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('government_ip_id')->references('id')->on('LR_industrial_park')->onDelete('cascade');
-
+            $table->foreign('sent_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('government_ip_id')->references('id')->on('stakeholders')->onDelete('cascade');
             $table->foreign('private_ip_id')->references('id')->on('LR_investments')->onDelete('cascade');
-
-            $table->foreign('lessor_investment_id')->references('id')->on('LR_investments')->onDelete('cascade');
-
-            $table->foreign('commissioner_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('investor_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('lessor_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('ipdc_representative_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('private_ip_representative_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('board_representative_id')->references('id')->on('users')->onDelete('cascade');
-
+            $table->foreign('sibling_id')->references('id')->on('LR_investments')->onDelete('cascade');
+            $table->foreign('private_ip_approved_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('private_ip_commented_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('government_ip_approved_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('government_ip_commented_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('sibling_approved_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('sibling_commented_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('eic_reviewed_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('eic_approved_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('board_approved_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('board_commented_by')->references('id')->on('users')->onDelete('cascade');
         });
 
 
+
+        Schema::table('LR_mou_data', function (Blueprint $table) {
+            $table->foreign('mou_id')->references('id')->on('LR_mou')->onDelete('cascade');
+            $table->foreign('mou_template_tag_id')->references('id')->on('LR_moa_template_tags')->onDelete('cascade');
+        });
 
         Schema::table('LR_shareholders', function (Blueprint $table) {
             $table->foreign('investment_id')->references('id')->on('LR_investments')->onDelete('cascade');
@@ -357,6 +337,7 @@ return new class extends Migration
         {
             $table->foreign('letter_code_id')->references('id')->on('letter_code')->onDelete('cascade');
             $table->foreign('stakeholder_id')->references('id')->on('stakeholders')->onDelete('cascade');
+            $table->foreign('main_stakeholder_id')->references('id')->on('main_stakeholders')->onDelete('cascade');
 
         });
 
